@@ -1,4 +1,5 @@
 const App = App || {};
+const google = google || {};
 
 App.init = function() {
   this.apiUrl = 'http://localhost:3000/api';
@@ -6,9 +7,8 @@ App.init = function() {
   $('.register').on('click', this.register.bind(this));
   $('.login').on('click', this.login.bind(this));
   $('.logout').on('click', this.logout.bind(this));
-  $('.usersIndex').on('click', this.usersIndex.bind(this));
+  $('.home').on('click', this.homepage.bind(this));
   this.$main.on('submit', 'form', this.handleForm);
-
   if (this.getToken()) {
     this.loggedInState();
   } else {
@@ -16,10 +16,26 @@ App.init = function() {
   }
 };
 
+App.createMap = function() {
+  const canvas = document.getElementById('canvas');
+  const mapOptions = {
+    zoom: 14,
+    center: new google.maps.LatLng(51.506178, -0.088369),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+  App.map = new google.maps.Map(canvas, mapOptions);
+  // this.getGyms();
+
+};
+
 App.loggedInState = function(){
   $('.loggedIn').show();
   $('.loggedOut').hide();
-  this.usersIndex();
+  this.$main.html(`
+    <div id="canvas"></div>
+    `);
+  this.createMap();
 };
 
 App.loggedOutState = function(){
@@ -31,39 +47,39 @@ App.loggedOutState = function(){
 App.register = function(e){
   if (e) e.preventDefault();
   this.$main.html(`
-    <h2>Register</h2>
-    <form method="post" action="/register">
+      <h2>Register</h2>
+      <form method="post" action="/register">
       <div class="form-group">
-        <input class="form-control" type="text" name="user[username]" placeholder="Username">
+      <input class="form-control" type="text" name="user[username]" placeholder="Username">
       </div>
       <div class="form-group">
-        <input class="form-control" type="email" name="user[email]" placeholder="Email">
+      <input class="form-control" type="email" name="user[email]" placeholder="Email">
       </div>
       <div class="form-group">
-        <input class="form-control" type="password" name="user[password]" placeholder="Password">
+      <input class="form-control" type="password" name="user[password]" placeholder="Password">
       </div>
       <div class="form-group">
-        <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
+      <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
       </div>
       <input class="btn btn-primary" type="submit" value="Register">
-    </form>
-  `);
+      </form>
+      `);
 };
 
 App.login = function(e) {
   e.preventDefault();
   this.$main.html(`
-    <h2>Login</h2>
-    <form method="post" action="/login">
-      <div class="form-group">
+        <h2>Login</h2>
+        <form method="post" action="/login">
+        <div class="form-group">
         <input class="form-control" type="email" name="email" placeholder="Email">
-      </div>
-      <div class="form-group">
+        </div>
+        <div class="form-group">
         <input class="form-control" type="password" name="password" placeholder="Password">
-      </div>
-      <input class="btn btn-primary" type="submit" value="Login">
-    </form>
-  `);
+        </div>
+        <input class="btn btn-primary" type="submit" value="Login">
+        </form>
+        `);
 };
 
 App.logout = function(e){
@@ -72,45 +88,20 @@ App.logout = function(e){
   this.loggedOutState();
 };
 
-App.usersIndex = function(e) {
-  if (e) e.preventDefault();
-  const url = `${this.apiUrl}/users`;
-
-  return this.ajaxRequest(url, 'get', null, data => {
-    this.$main.html(`
-      <div class="card-deck-wrapper">
-        <div class="card-deck">
-        </div>
-      </div>
-    `);
-    const $container = this.$main.find('.card-deck');
-    $.each(data.users, (i, user) => {
-      $container.append(`
-        <div class="card col-md-4">
-         <img class="card-img-top" src="http://fillmurray.com/300/300" alt="Card image cap">
-         <div class="card-block">
-           <h4 class="card-title">${user.username}</h4>
-           <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-           <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-         </div>
-       </div>`);
-    });
-  });
+App.homepage = function(){
+  console.log('shabba!');
 };
 
 App.handleForm = function(e){
   e.preventDefault();
-
   const url    = `${App.apiUrl}${$(this).attr('action')}`;
   const method = $(this).attr('method');
   const data   = $(this).serialize();
-
   return App.ajaxRequest(url, method, data, data => {
     if (data.token) App.setToken(data.token);
     App.loggedInState();
   });
 };
-
 App.ajaxRequest = function(url, method, data, callback){
   return $.ajax({
     url,
@@ -118,27 +109,21 @@ App.ajaxRequest = function(url, method, data, callback){
     data,
     beforeSend: this.setRequestHeader.bind(this)
   })
-  .done(callback)
-  .fail(data => {
-    console.log(data);
-  });
+        .done(callback)
+        .fail(data => {
+          console.log(data);
+        });
 };
-
 App.setRequestHeader = function(xhr) {
   return xhr.setRequestHeader('Authorization', `Bearer ${this.getToken()}`);
 };
-
 App.setToken = function(token){
   return window.localStorage.setItem('token', token);
 };
-
 App.getToken = function(){
   return window.localStorage.getItem('token');
 };
-
 App.removeToken = function(){
   return window.localStorage.clear();
 };
-
-
 $(App.init.bind(App));

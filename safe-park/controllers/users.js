@@ -1,5 +1,3 @@
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfYnNvbnR5cGUiOiJPYmplY3RJRCIsImlkIjoiV8OOw509P8Ozw4PCocOKwqbCqVoiLCJpYXQiOjE0NzMxNzQ4NDUsImV4cCI6MTQ3MzI2MTI0NX0.VeBrh-s0LwYWPd2ZYf_Q9XzuLfFxz7S3GZFpvZ3MFn4
-
 module.exports = {
   index: usersIndex,
   show: usersShow,
