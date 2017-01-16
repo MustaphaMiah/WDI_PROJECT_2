@@ -46,9 +46,8 @@ App.getCrimes = function() {
     const service = new google.maps.places.PlacesService(App.map);
     function callback(results, status){
       console.log(status);
-      if (status == 'OK'){
+      if (status === 'OK'){
         $.each(results, (index, result) => {
-          // console.log('parking', result);
           App.addMarkerForParking(result);
         });
       }
@@ -69,7 +68,7 @@ App.loopThroughArray = function(data) {
   $.each(data, (index, crime) => {
     setTimeout(() => {
       App.addMarkerForCrime(crime);
-    }, index*100);
+    }, index*80);
   });
 };
 
@@ -77,10 +76,10 @@ App.addMarkerForParking = function(result){
   const marker = new google.maps.Marker({
     position: result.geometry.location,
     map: App.map,
-    // icon: 'http://www.clker.com/cliparts/8/c/5/7/12065719891083906889johnny_automatic_NPS_map_pictographs_part_51.svg.hi.png',
+    icon: '../images/p.png',
     animation: google.maps.Animation.DROP
   });
-}
+};
 
 App.addMarkerForCrime = function(crime) {
   const latlng = new google.maps.LatLng(parseFloat(crime.location.latitude), parseFloat(crime.location.longitude));
@@ -121,96 +120,96 @@ App.loggedInState = function() {
   this.$main.html(`
     <div id="canvas"></div>
     `);
-    this.createMap.bind(this)();
-  };
+  this.createMap.bind(this)();
+};
 
-  App.loggedOutState = function(){
-    $('.loggedIn').hide();
-    $('.loggedOut').show();
-    this.register();
-  };
+App.loggedOutState = function(){
+  $('.loggedIn').hide();
+  $('.loggedOut').show();
+  this.register();
+};
 
-  App.register = function(e){
-    if (e) e.preventDefault();
-    this.$main.html(`
-      <h2>Register</h2>
-      <form method="post" action="/register">
-      <div class="form-group">
-      <input class="form-control" type="text" name="user[username]" placeholder="Username">
-      </div>
-      <div class="form-group">
-      <input class="form-control" type="email" name="user[email]" placeholder="Email">
-      </div>
-      <div class="form-group">
-      <input class="form-control" type="password" name="user[password]" placeholder="Password">
-      </div>
-      <div class="form-group">
-      <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
-      </div>
-      <input class="btn btn-primary" type="submit" value="Register">
-      </form>
-      `);
-    };
+App.register = function(e){
+  if (e) e.preventDefault();
+  this.$main.html(`
+    <h2>Register</h2>
+    <form method="post" action="/register">
+    <div class="form-group">
+    <input class="form-control" type="text" name="user[username]" placeholder="Username">
+    </div>
+    <div class="form-group">
+    <input class="form-control" type="email" name="user[email]" placeholder="Email">
+    </div>
+    <div class="form-group">
+    <input class="form-control" type="password" name="user[password]" placeholder="Password">
+    </div>
+    <div class="form-group">
+    <input class="form-control" type="password" name="user[passwordConfirmation]" placeholder="Password Confirmation">
+    </div>
+    <input class="btn btn-primary" type="submit" value="Register">
+    </form>
+    `);
+};
 
-    App.login = function(e) {
-      e.preventDefault();
-      this.$main.html(`
-        <h2>Login</h2>
-        <form method="post" action="/login">
-        <div class="form-group">
-        <input class="form-control" type="email" name="email" placeholder="Email">
-        </div>
-        <div class="form-group">
-        <input class="form-control" type="password" name="password" placeholder="Password">
-        </div>
-        <input class="btn btn-primary" type="submit" value="Login">
-        </form>
-        `);
-      };
+App.login = function(e) {
+  e.preventDefault();
+  this.$main.html(`
+    <h2>Login</h2>
+    <form method="post" action="/login">
+    <div class="form-group">
+    <input class="form-control" type="email" name="email" placeholder="Email">
+    </div>
+    <div class="form-group">
+    <input class="form-control" type="password" name="password" placeholder="Password">
+    </div>
+    <input class="btn btn-primary" type="submit" value="Login">
+    </form>
+    `);
+};
 
-      App.logout = function(e){
-        e.preventDefault();
-        this.removeToken();
-        this.loggedOutState();
-      };
+App.logout = function(e){
+  e.preventDefault();
+  this.removeToken();
+  this.loggedOutState();
+};
 
-      App.homepage = function(){
-      };
+App.homepage = function(){
+};
 
-      App.handleForm = function(e){
-        e.preventDefault();
-        const url    = `${App.apiUrl}${$(this).attr('action')}`;
-        const method = $(this).attr('method');
-        const data   = $(this).serialize();
-        return App.ajaxRequest(url, method, data, data => {
-          if (data.token) App.setToken(data.token);
-          App.loggedInState();
-        });
-      };
+App.handleForm = function(e){
+  e.preventDefault();
+  const url    = `${App.apiUrl}${$(this).attr('action')}`;
+  const method = $(this).attr('method');
+  const data   = $(this).serialize();
+  return App.ajaxRequest(url, method, data, data => {
+    if (data.token) App.setToken(data.token);
+    App.loggedInState();
+  });
+};
 
-      App.ajaxRequest = function(url, method, data, callback){
-        return $.ajax({
-          url,
-          method,
-          data,
-          beforeSend: this.setRequestHeader.bind(this)
-        })
-        .done(callback)
-        .fail(data => {
-          console.log(data);
-        });
-      };
+App.ajaxRequest = function(url, method, data, callback){
+  return $.ajax({
+    url,
+    method,
+    data,
+    beforeSend: this.setRequestHeader.bind(this)
+  })
+  .done(callback)
+  .fail(data => {
+    console.log(data);
+  });
+};
 
-      App.setRequestHeader = function(xhr) {
-        return xhr.setRequestHeader('Authorization', `Bearer ${this.getToken()}`);
-      };
-      App.setToken = function(token){
-        return window.localStorage.setItem('token', token);
-      };
-      App.getToken = function(){
-        return window.localStorage.getItem('token');
-      };
-      App.removeToken = function(){
-        return window.localStorage.clear();
-      };
-      $(App.init.bind(App));
+App.setRequestHeader = function(xhr) {
+  return xhr.setRequestHeader('Authorization', `Bearer ${this.getToken()}`);
+};
+App.setToken = function(token){
+  return window.localStorage.setItem('token', token);
+};
+App.getToken = function(){
+  return window.localStorage.getItem('token');
+};
+App.removeToken = function(){
+  return window.localStorage.clear();
+};
+$(App.init.bind(App));
