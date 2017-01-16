@@ -57,7 +57,9 @@ App.getCrimes = function() {
       types: ['parking']
     };
 
-    service.nearbySearch(request, callback);
+    setTimeout(function(){
+      service.nearbySearch(request, callback);
+    }, 2000);
 
     function callback(results, status){
       // console.log(status);
@@ -130,9 +132,7 @@ App.addInfoWindowForCrime = function(crime, marker) {
       <div class="info-window">
       <h2>Crime</h2>
       <p>Outcome: ${crime.outcome_status.category}</p><p>Where: ${ crime.location.street.name }</p>
-      </div>
-      `
-    });
+      </div>`});
 
     this.infoWindow.open(this.map, marker);
   });
