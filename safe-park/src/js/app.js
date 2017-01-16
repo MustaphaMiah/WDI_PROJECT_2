@@ -30,41 +30,47 @@ App.createMap = function() {
 
 App.getCrimes = function() {
   navigator.geolocation.getCurrentPosition(position => {
+    // Get crimes
     $.get(`https://data.police.uk/api/crimes-street/all-crime?lat=${position.coords.latitude}&lng=${position.coords.longitude}`).done( data => {
       const crimes = data.filter(crime => crime.category === 'vehicle-crime');
       this.loopThroughArray(crimes);
     });
+
     const latlng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
-    const marker = new google.maps.Marker({
+
+    // Add you to the map!
+    new google.maps.Marker({
       position: latlng,
       map: App.map,
-      // icon: '../images/marker.png',
+      // icon: '../images/',
       animation: google.maps.Animation.DROP
     });
+
     App.map.panTo(latlng);
     App.map.setZoom(14);
+
     const service = new google.maps.places.PlacesService(App.map);
-    function callback(results, status){
-      console.log(status);
-      if (status === 'OK'){
-        $.each(results, (index, result) => {
-          App.addMarkerForParking(result);
-        });
-      }
-    }
+
     const request = {
       location: latlng,
       radius: '1600',
       types: ['parking']
     };
+
     service.nearbySearch(request, callback);
+
+    function callback(results, status){
+      // console.log(status);
+      if (status === 'OK'){
+        $.each(results, (index, parking) => {
+          App.addMarkerForParking(parking);
+        });
+      }
+    }
   });
 };
 
-
-
 App.loopThroughArray = function(data) {
-
   $.each(data, (index, crime) => {
     setTimeout(() => {
       App.addMarkerForCrime(crime);
@@ -72,12 +78,34 @@ App.loopThroughArray = function(data) {
   });
 };
 
-App.addMarkerForParking = function(result){
+App.addMarkerForParking = function(parking){
+  // console.log(parking);
   const marker = new google.maps.Marker({
-    position: result.geometry.location,
+    position: parking.geometry.location,
     map: App.map,
     icon: '../images/p.png',
     animation: google.maps.Animation.DROP
+  });
+
+  App.addInfoWindowForParking(parking, marker);
+};
+
+App.addInfoWindowForParking = function(parking, marker) {
+  google.maps.event.addListener(marker, 'click', () => {
+    if (typeof this.infoWindow !== 'undefined') this.infoWindow.close();
+
+    const rating = parking.rating ? parking.rating : 'Unknown';
+
+    this.infoWindow = new google.maps.InfoWindow({
+      content: `
+      <div class="info-window2">
+      <h2>Parking</h2>
+      <p>Name: ${parking.name}</p><p>Rating: ${rating}</p>
+      </div>
+      `
+    });
+
+    this.infoWindow.open(this.map, marker);
   });
 };
 
@@ -91,7 +119,6 @@ App.addMarkerForCrime = function(crime) {
   });
 
   App.addInfoWindowForCrime(crime, marker);
-
 };
 
 App.addInfoWindowForCrime = function(crime, marker) {
