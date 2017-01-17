@@ -34,16 +34,28 @@ App.getCrimes = function() {
     $.get(`https://data.police.uk/api/crimes-street/all-crime?lat=${position.coords.latitude}&lng=${position.coords.longitude}`).done( data => {
       const crimes = data.filter(crime => crime.category === 'vehicle-crime');
       this.loopThroughArray(crimes);
+      // console.log(crimes);
     });
 
     const latlng = new google.maps.LatLng(parseFloat(position.coords.latitude), parseFloat(position.coords.longitude));
 
     // Add you to the map!
-    new google.maps.Marker({
+    var newMarker = new google.maps.Marker({
       position: latlng,
       map: App.map,
       // icon: '../images/',
       animation: google.maps.Animation.DROP
+    });
+
+    var cityCircle = new google.maps.Circle({
+      strokeColor: '#42f453',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#42f453',
+      fillOpacity: 0.35,
+      map: App.map,
+      radius: 1700,
+      center: latlng
     });
 
     App.map.panTo(latlng);
@@ -131,7 +143,7 @@ App.addInfoWindowForCrime = function(crime, marker) {
       content: `
       <div class="info-window">
       <h2>Crime</h2>
-      <p>Outcome: ${crime.outcome_status.category}</p><p>Where: ${ crime.location.street.name }</p>
+      <p>Outcome: ${crime.outcome_status.category}</p><p>Where: ${ crime.location.street.name }</p><p>When: ${ crime.month }</p>
       </div>`});
 
     this.infoWindow.open(this.map, marker);
@@ -141,7 +153,7 @@ App.addInfoWindowForCrime = function(crime, marker) {
 // $(Crime.mapSetup.bind(Crime));
 
 App.loggedInState = function() {
-  console.log('loggedin');
+  // console.log('loggedin');
   $('.loggedIn').show();
   $('.loggedOut').hide();
   this.$main.html(`
@@ -159,7 +171,7 @@ App.loggedOutState = function(){
 App.register = function(e){
   if (e) e.preventDefault();
   this.$main.html(`
-    <h2>Register</h2>
+    <h2 class = "signup">Sign Up</h2>
     <form method="post" action="/register">
     <div class="form-group">
     <input class="form-control" type="text" name="user[username]" placeholder="Username">
@@ -181,7 +193,7 @@ App.register = function(e){
 App.login = function(e) {
   e.preventDefault();
   this.$main.html(`
-    <h2>Login</h2>
+    <h2 class = "login" >Login</h2>
     <form method="post" action="/login">
     <div class="form-group">
     <input class="form-control" type="email" name="email" placeholder="Email">
