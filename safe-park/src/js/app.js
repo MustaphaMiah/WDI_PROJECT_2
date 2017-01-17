@@ -21,7 +21,325 @@ App.createMap = function() {
   const mapOptions = {
     zoom: 10,
     center: new google.maps.LatLng(51.497860, -0.137855),
-    mapTypeId: google.maps.MapTypeId.ROADMAP
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    styles:
+    [
+      {
+        'featureType': 'all',
+        'elementType': 'labels.text.fill',
+        'stylers': [
+          {
+            'color': '#ffffff'
+          }
+        ]
+      },
+      {
+        'featureType': 'all',
+        'elementType': 'labels.text.stroke',
+        'stylers': [
+          {
+            'color': '#000000'
+          },
+          {
+            'lightness': 13
+          }
+        ]
+      },
+      {
+        'featureType': 'administrative',
+        'elementType': 'geometry.fill',
+        'stylers': [
+          {
+            'color': '#000000'
+          }
+        ]
+      },
+      {
+        'featureType': 'administrative',
+        'elementType': 'geometry.stroke',
+        'stylers': [
+          {
+            'color': '#144b53'
+          },
+          {
+            'lightness': 14
+          },
+          {
+            'weight': 1.4
+          }
+        ]
+      },
+      {
+        'featureType': 'landscape',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'color': '#10171f'
+          },
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'landscape.man_made',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'landscape.natural',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'landscape.natural.landcover',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'landscape.natural.terrain',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'on'
+          },
+          {
+            'lightness': '0'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'hue': '#ff00de'
+          },
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi',
+        'elementType': 'geometry',
+        'stylers': [
+          {
+            'lightness': 5
+          }
+        ]
+      },
+      {
+        'featureType': 'poi',
+        'elementType': 'labels',
+        'stylers': [
+          {
+            'weight': '0.01'
+          },
+          {
+            'lightness': '0'
+          },
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi',
+        'elementType': 'labels.text',
+        'stylers': [
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi',
+        'elementType': 'labels.text.stroke',
+        'stylers': [
+          {
+            'visibility': 'on'
+          },
+          {
+            'color': '#ff0000'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi.attraction',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi.business',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'off'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi.government',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'off'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi.medical',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'off'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi.place_of_worship',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'off'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi.school',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'off'
+          }
+        ]
+      },
+      {
+        'featureType': 'poi.sports_complex',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'visibility': 'off'
+          }
+        ]
+      },
+      {
+        'featureType': 'road',
+        'elementType': 'geometry',
+        'stylers': [
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'road',
+        'elementType': 'labels.text',
+        'stylers': [
+          {
+            'visibility': 'on'
+          }
+        ]
+      },
+      {
+        'featureType': 'road.highway',
+        'elementType': 'geometry.fill',
+        'stylers': [
+          {
+            'color': '#000000'
+          }
+        ]
+      },
+      {
+        'featureType': 'road.highway',
+        'elementType': 'geometry.stroke',
+        'stylers': [
+          {
+            'color': '#0b434f'
+          },
+          {
+            'lightness': 25
+          }
+        ]
+      },
+      {
+        'featureType': 'road.arterial',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'color': '#51bfca'
+          }
+        ]
+      },
+      {
+        'featureType': 'road.arterial',
+        'elementType': 'geometry.fill',
+        'stylers': [
+          {
+            'color': '#a84c9c'
+          }
+        ]
+      },
+      {
+        'featureType': 'road.arterial',
+        'elementType': 'geometry.stroke',
+        'stylers': [
+          {
+            'color': '#0b3d51'
+          },
+          {
+            'lightness': 16
+          }
+        ]
+      },
+      {
+        'featureType': 'road.local',
+        'elementType': 'geometry',
+        'stylers': [
+          {
+            'color': '#51bfca'
+          }
+        ]
+      },
+      {
+        'featureType': 'transit',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'color': '#146474'
+          },
+          {
+            'visibility': 'off'
+          }
+        ]
+      },
+      {
+        'featureType': 'water',
+        'elementType': 'all',
+        'stylers': [
+          {
+            'color': '#021019'
+          }
+        ]
+      }
+    ]
   };
 
   App.map = new google.maps.Map(canvas, mapOptions);
@@ -88,7 +406,7 @@ App.loopThroughArray = function(data) {
   $.each(data, (index, crime) => {
     setTimeout(() => {
       App.addMarkerForCrime(crime);
-    }, index*80);
+    }, index*90);
   });
 };
 
