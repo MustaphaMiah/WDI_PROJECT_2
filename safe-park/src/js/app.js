@@ -361,7 +361,7 @@ App.getCrimes = function() {
     var newMarker = new google.maps.Marker({
       position: latlng,
       map: App.map,
-      // icon: '../images/',
+      icon: '../images/you.png',
       animation: google.maps.Animation.DROP
     });
 
@@ -406,7 +406,7 @@ App.loopThroughArray = function(data) {
   $.each(data, (index, crime) => {
     setTimeout(() => {
       App.addMarkerForCrime(crime);
-    }, index*90);
+    }, index*80);
   });
 };
 
@@ -477,14 +477,22 @@ App.loggedInState = function() {
   this.$main.html(`
     <div id="canvas"></div>
     `);
+
+  $('body').css('background', 'none');
+
   this.createMap.bind(this)();
 };
+
 
 App.loggedOutState = function(){
   $('.loggedIn').hide();
   $('.loggedOut').show();
+  $('body').css('background-image', 'url(http://cdn3.digitalartsonline.co.uk/cmsdata/slideshow/3517021/3_Fortune_FutureDashboard-DA.jpg)');
+
   this.register();
 };
+
+
 
 App.register = function(e){
   if (e) e.preventDefault();
